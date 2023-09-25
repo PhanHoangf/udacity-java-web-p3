@@ -23,4 +23,10 @@ public class CustomerRepositoryImpl implements CustomerRepositoryIntf {
     public CustomerEntity findCustomerById (Long id) {
         return entityManager.find( CustomerEntity.class, id );
     }
+
+    @Override
+    public CustomerEntity findCustomerByPetId (Long id) {
+
+        return null;
+    }
 }

@@ -12,7 +12,7 @@ public class PetEntity {
     @GeneratedValue
     private Long id;
 
-    private Integer type;
+    private String type;
 
     @Nationalized
     private String name;
@@ -33,11 +33,11 @@ public class PetEntity {
         this.id = id;
     }
 
-    public Integer getType () {
+    public String getType () {
         return type;
     }
 
-    public void setType (Integer type) {
+    public void setType (String type) {
         this.type = type;
     }
 

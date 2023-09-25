@@ -1,15 +1,23 @@
 package com.udacity.jdnd.course3.critter.service;
 
 import com.udacity.jdnd.course3.critter.entity.CustomerEntity;
+import com.udacity.jdnd.course3.critter.entity.PetEntity;
 import com.udacity.jdnd.course3.critter.repository.impl.CustomerRepositoryImpl;
+import com.udacity.jdnd.course3.critter.repository.impl.PetRepositoryImpl;
 import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
     @Autowired
     private CustomerRepositoryImpl customerRepository;
+
+    @Autowired
+    private PetRepositoryImpl petRepository;
 
     public CustomerDTO createCustomer (CustomerDTO customer) {
         CustomerEntity customerEntity = new CustomerEntity();
@@ -29,6 +37,17 @@ public class CustomerService {
         customerDTO.setName( customer.getName() );
         customerDTO.setPhoneNumber( customer.getPhoneNumber() );
         customerDTO.setNotes( customer.getNotes() );
+        customerDTO.setPetIds( customer.getPetList().stream().map( PetEntity::getId ).collect( Collectors.toList() ) );
         return customerDTO;
+    }
+
+    public CustomerDTO getCustomerByPetId (Long petId) throws Exception {
+        PetEntity petEntity = petRepository.findPetById( petId );
+        if ( !Objects.isNull( petEntity ) ) {
+            CustomerEntity customerEntity = customerRepository.findCustomerById( petEntity.getCustomer().getId() );
+            return createCustomerDto( customerEntity );
+        } else {
+            throw new Exception( "Not found" );
+        }
     }
 }

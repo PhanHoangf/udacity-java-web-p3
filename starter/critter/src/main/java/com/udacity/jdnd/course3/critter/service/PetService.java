@@ -26,12 +26,12 @@ public class PetService {
             petEntity.setCustomer( customerEntity );
             petEntity.setName( petDTO.getName() );
             petEntity.setBirthDate( petDTO.getBirthDate() );
-            petEntity.setType( Integer.parseInt( petDTO.getType().toString() ) );
+            petEntity.setType( petDTO.getType().toString() );
             petEntity.setNotes( petDTO.getNotes() );
 
             petRepository.createPet( petEntity );
         } else {
-
+            //TODO: Throw error customer not found
         }
         return petDTO;
     }

@@ -1,6 +1,5 @@
 package com.udacity.jdnd.course3.critter.repository.impl;
 
-import com.udacity.jdnd.course3.critter.entity.CustomerEntity;
 import com.udacity.jdnd.course3.critter.entity.PetEntity;
 import com.udacity.jdnd.course3.critter.repository.intf.PetRepositoryIntf;
 import org.springframework.stereotype.Repository;
@@ -16,8 +15,12 @@ public class PetRepositoryImpl implements PetRepositoryIntf {
     EntityManager entityManager;
 
     @Override
-    public PetEntity createPet (PetEntity pet) {
+    public void createPet (PetEntity pet) {
         entityManager.persist( pet );
-        return pet;
+    }
+
+    @Override
+    public PetEntity findPetById (Long id) {
+        return entityManager.find( PetEntity.class, id );
     }
 }
