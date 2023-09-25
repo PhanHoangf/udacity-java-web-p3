@@ -8,6 +8,8 @@ import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -19,35 +21,46 @@ public class CustomerService {
     @Autowired
     private PetRepositoryImpl petRepository;
 
-    public CustomerDTO createCustomer (CustomerDTO customer) {
+    public CustomerDTO createCustomer(CustomerDTO customer) {
         CustomerEntity customerEntity = new CustomerEntity();
 
-        customerEntity.setName( customer.getName() );
-        customerEntity.setPhoneNumber( customer.getPhoneNumber() );
-        customerEntity.setNotes( customer.getNotes() );
+        customerEntity.setName(customer.getName());
+        customerEntity.setPhoneNumber(customer.getPhoneNumber());
+        customerEntity.setNotes(customer.getNotes());
 
-        customerRepository.createCustomer( customerEntity );
+        customerRepository.createCustomer(customerEntity);
         return customer;
     }
 
+    public List<CustomerDTO> getAllCustomer() {
+        List<CustomerEntity> customerEntities = customerRepository.getAllCustomer();
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
+        for (CustomerEntity entity : customerEntities) {
+            CustomerDTO customerDTO = createCustomerDto(entity);
+            customerDTOList.add(customerDTO);
+        }
 
-    private CustomerDTO createCustomerDto (CustomerEntity customer) {
+        return customerDTOList;
+    }
+
+
+    private CustomerDTO createCustomerDto(CustomerEntity customer) {
         CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setId( customer.getId() );
-        customerDTO.setName( customer.getName() );
-        customerDTO.setPhoneNumber( customer.getPhoneNumber() );
-        customerDTO.setNotes( customer.getNotes() );
-        customerDTO.setPetIds( customer.getPetList().stream().map( PetEntity::getId ).collect( Collectors.toList() ) );
+        customerDTO.setId(customer.getId());
+        customerDTO.setName(customer.getName());
+        customerDTO.setPhoneNumber(customer.getPhoneNumber());
+        customerDTO.setNotes(customer.getNotes());
+        customerDTO.setPetIds(customer.getPetList().stream().map(PetEntity::getId).collect(Collectors.toList()));
         return customerDTO;
     }
 
-    public CustomerDTO getCustomerByPetId (Long petId) throws Exception {
-        PetEntity petEntity = petRepository.findPetById( petId );
-        if ( !Objects.isNull( petEntity ) ) {
-            CustomerEntity customerEntity = customerRepository.findCustomerById( petEntity.getCustomer().getId() );
-            return createCustomerDto( customerEntity );
+    public CustomerDTO getCustomerByPetId(Long petId) throws Exception {
+        PetEntity petEntity = petRepository.findPetById(petId);
+        if (!Objects.isNull(petEntity)) {
+            CustomerEntity customerEntity = customerRepository.findCustomerById(petEntity.getCustomer().getId());
+            return createCustomerDto(customerEntity);
         } else {
-            throw new Exception( "Not found" );
+            throw new Exception("Not found");
         }
     }
 }

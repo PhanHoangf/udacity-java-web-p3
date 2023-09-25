@@ -16,22 +16,22 @@ public class PetController {
     private PetService petService;
 
     @PostMapping
-    public PetDTO savePet (@RequestBody PetDTO petDTO) {
-        return petService.createPet( petDTO );
+    public PetDTO savePet(@RequestBody PetDTO petDTO) {
+        return petService.createPet(petDTO);
     }
 
     @GetMapping("/{petId}")
-    public PetDTO getPet (@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+    public PetDTO getPet(@PathVariable long petId) {
+        return petService.findPetById(petId);
     }
 
     @GetMapping
-    public List<PetDTO> getPets () {
-        throw new UnsupportedOperationException();
+    public List<PetDTO> getPets() {
+        return petService.getAllPet();
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<PetDTO> getPetsByOwner (@PathVariable long ownerId) {
-        throw new UnsupportedOperationException();
+    public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
+        return petService.getPetsByOwnerId(ownerId);
     }
 }
