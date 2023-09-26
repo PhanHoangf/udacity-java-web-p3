@@ -21,37 +21,37 @@ public class UserController {
     private CustomerService customerService;
 
     @PostMapping("/customer")
-    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
-        return customerService.createCustomer(customerDTO);
+    public CustomerDTO saveCustomer (@RequestBody CustomerDTO customerDTO) {
+        return customerService.createCustomer( customerDTO );
     }
 
     @GetMapping("/customer")
-    public List<CustomerDTO> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers () {
         return customerService.getAllCustomer();
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId) throws Exception {
-        return customerService.getCustomerByPetId(petId);
+    public CustomerDTO getOwnerByPet (@PathVariable long petId) throws Exception {
+        return customerService.getCustomerByPetId( petId );
     }
 
     @PostMapping("/employee")
-    public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public EmployeeDTO saveEmployee (@RequestBody EmployeeDTO employeeDTO) {
         throw new UnsupportedOperationException();
     }
 
     @PostMapping("/employee/{employeeId}")
-    public EmployeeDTO getEmployee(@PathVariable long employeeId) {
+    public EmployeeDTO getEmployee (@PathVariable long employeeId) {
         throw new UnsupportedOperationException();
     }
 
     @PutMapping("/employee/{employeeId}")
-    public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
+    public void setAvailability (@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
         throw new UnsupportedOperationException();
     }
 
     @GetMapping("/employee/availability")
-    public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
+    public List<EmployeeDTO> findEmployeesForService (@RequestBody EmployeeRequestDTO employeeDTO) {
         throw new UnsupportedOperationException();
     }
 

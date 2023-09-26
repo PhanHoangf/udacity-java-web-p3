@@ -18,7 +18,6 @@ public class CustomerEntity {
     private String phoneNumber;
     private String notes;
 
-
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PetEntity> petList;
 
