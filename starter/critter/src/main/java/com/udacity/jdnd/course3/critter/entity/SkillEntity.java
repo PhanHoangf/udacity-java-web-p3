@@ -18,4 +18,28 @@ public class SkillEntity {
 
     @Column(name = "name")
     private EmployeeSkill skillName;
+
+    public Long getId () {
+        return id;
+    }
+
+    public void setId (Long id) {
+        this.id = id;
+    }
+
+    public Set<EmployeeEntity> getEmployeeEntity () {
+        return employeeEntity;
+    }
+
+    public void setEmployeeEntity (Set<EmployeeEntity> employeeEntity) {
+        this.employeeEntity = employeeEntity;
+    }
+
+    public EmployeeSkill getSkillName () {
+        return skillName;
+    }
+
+    public void setSkillName (EmployeeSkill skillName) {
+        this.skillName = skillName;
+    }
 }

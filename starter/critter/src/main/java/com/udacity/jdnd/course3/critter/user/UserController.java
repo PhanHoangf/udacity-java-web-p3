@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.service.CustomerService;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,9 @@ public class UserController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    EmployeeService employeeService;
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer (@RequestBody CustomerDTO customerDTO) {
         return customerService.createCustomer( customerDTO );
@@ -37,7 +41,7 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee (@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        return employeeService.createEmployee( employeeDTO );
     }
 
     @PostMapping("/employee/{employeeId}")

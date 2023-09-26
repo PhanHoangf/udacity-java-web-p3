@@ -15,7 +15,7 @@ public class EmployeeEntity {
     @Nationalized
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "skill_employee",
             joinColumns = @JoinColumn(name = "employee_id"),
