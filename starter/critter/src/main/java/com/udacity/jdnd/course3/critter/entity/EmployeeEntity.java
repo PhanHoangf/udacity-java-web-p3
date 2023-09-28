@@ -23,7 +23,7 @@ public class EmployeeEntity {
     )
     private Set<SkillEntity> skills;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "day_employee_available",
             joinColumns = @JoinColumn(name = "employee_id"),

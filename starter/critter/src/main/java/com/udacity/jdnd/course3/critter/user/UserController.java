@@ -25,38 +25,41 @@ public class UserController {
     EmployeeService employeeService;
 
     @PostMapping("/customer")
-    public CustomerDTO saveCustomer (@RequestBody CustomerDTO customerDTO) {
-        return customerService.createCustomer( customerDTO );
+    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
+        return customerService.createCustomer(customerDTO);
     }
 
     @GetMapping("/customer")
-    public List<CustomerDTO> getAllCustomers () {
+    public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomer();
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet (@PathVariable long petId) throws Exception {
-        return customerService.getCustomerByPetId( petId );
+    public CustomerDTO getOwnerByPet(@PathVariable long petId) throws Exception {
+        return customerService.getCustomerByPetId(petId);
     }
 
     @PostMapping("/employee")
-    public EmployeeDTO saveEmployee (@RequestBody EmployeeDTO employeeDTO) {
-        return employeeService.createEmployee( employeeDTO );
+    public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        return employeeService.createEmployee(employeeDTO);
     }
 
     @PostMapping("/employee/{employeeId}")
-    public EmployeeDTO getEmployee (@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public EmployeeDTO getEmployee(@PathVariable long employeeId) {
+        return employeeService.findEmployeeById(employeeId);
     }
 
     @PutMapping("/employee/{employeeId}")
-    public void setAvailability (@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public void setAvailability(
+            @RequestBody Set<DayOfWeek> daysAvailable,
+            @PathVariable long employeeId
+    ) {
+        employeeService.setEmployeeAvailability(daysAvailable, employeeId);
     }
 
     @GetMapping("/employee/availability")
-    public List<EmployeeDTO> findEmployeesForService (@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+    public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
+        return employeeService.findEmployeesForService(employeeDTO);
     }
 
 }

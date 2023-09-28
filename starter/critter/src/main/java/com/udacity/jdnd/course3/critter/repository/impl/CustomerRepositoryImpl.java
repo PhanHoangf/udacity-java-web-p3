@@ -20,7 +20,11 @@ public class CustomerRepositoryImpl implements CustomerRepositoryIntf {
 
     @Override
     public void createCustomer(CustomerEntity customer) {
-        entityManager.persist(customer);
+        if (customer.getId() != null) {
+            entityManager.merge(customer);
+        } else {
+            entityManager.persist(customer);
+        }
     }
 
     @Override

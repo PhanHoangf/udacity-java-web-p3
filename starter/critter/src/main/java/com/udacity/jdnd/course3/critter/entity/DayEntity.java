@@ -27,6 +27,7 @@ public class DayEntity {
         this.id = id;
     }
 
+
     public DayOfWeek getDayOfWeek () {
         return dayOfWeek;
     }

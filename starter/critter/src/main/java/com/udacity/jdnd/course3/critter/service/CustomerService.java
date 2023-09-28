@@ -29,6 +29,8 @@ public class CustomerService {
         customerEntity.setNotes(customer.getNotes());
 
         customerRepository.createCustomer(customerEntity);
+
+        customer.setId(customerEntity.getId());
         return customer;
     }
 
@@ -50,14 +52,21 @@ public class CustomerService {
         customerDTO.setName(customer.getName());
         customerDTO.setPhoneNumber(customer.getPhoneNumber());
         customerDTO.setNotes(customer.getNotes());
-        customerDTO.setPetIds(customer.getPetList().stream().map(PetEntity::getId).collect(Collectors.toList()));
+        if (Objects.isNull(customer.getPetList())) {
+            customer.setPetList(new ArrayList<>());
+        }
+        customerDTO.setPetIds(customer.getPetList()
+                .stream()
+                .map(PetEntity::getId)
+                .collect(Collectors.toList()));
         return customerDTO;
     }
 
     public CustomerDTO getCustomerByPetId(Long petId) throws Exception {
         PetEntity petEntity = petRepository.findPetById(petId);
         if (!Objects.isNull(petEntity)) {
-            CustomerEntity customerEntity = customerRepository.findCustomerById(petEntity.getCustomer().getId());
+            CustomerEntity customerEntity = customerRepository.findCustomerById(petEntity.getCustomer()
+                    .getId());
             return createCustomerDto(customerEntity);
         } else {
             throw new Exception("Not found");

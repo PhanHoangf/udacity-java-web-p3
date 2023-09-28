@@ -9,6 +9,7 @@ import com.udacity.jdnd.course3.critter.repository.impl.PetRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,6 +34,14 @@ public class PetService {
             petEntity.setNotes(petDTO.getNotes());
 
             petRepository.createPet(petEntity);
+
+            List<PetEntity> customerPetList = customerEntity.getPetList() != null ? customerEntity.getPetList() : new ArrayList<>();
+            customerPetList.add(petEntity);
+            customerEntity.setPetList(customerPetList);
+
+            customerRepository.createCustomer(customerEntity);
+
+            petDTO.setId(petEntity.getId());
         } else {
             //TODO: Throw error customer not found
         }
@@ -42,7 +51,9 @@ public class PetService {
     public List<PetDTO> getAllPet() {
         List<PetEntity> petEntities = petRepository.getAllPet();
 
-        return petEntities.stream().map(this::createPetDto).collect(Collectors.toList());
+        return petEntities.stream()
+                .map(this::createPetDto)
+                .collect(Collectors.toList());
     }
 
     public PetDTO findPetById(Long id) {
@@ -53,7 +64,9 @@ public class PetService {
 
     public List<PetDTO> getPetsByOwnerId(Long ownerId) {
         List<PetEntity> petEntities = petRepository.getPetsByOwnerId(ownerId);
-        return petEntities.stream().map(this::createPetDto).collect(Collectors.toList());
+        return petEntities.stream()
+                .map(this::createPetDto)
+                .collect(Collectors.toList());
     }
 
     private PetDTO createPetDto(PetEntity pet) {

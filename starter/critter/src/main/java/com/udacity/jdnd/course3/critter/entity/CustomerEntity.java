@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "customer")
 public class CustomerEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nationalized
@@ -18,46 +18,46 @@ public class CustomerEntity {
     private String phoneNumber;
     private String notes;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<PetEntity> petList;
 
-    public Long getId () {
+    public Long getId() {
         return id;
     }
 
-    public void setId (Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getPhoneNumber () {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber (String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getNotes () {
+    public String getNotes() {
         return notes;
     }
 
-    public void setNotes (String notes) {
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 
-    public List<PetEntity> getPetList () {
+    public List<PetEntity> getPetList() {
         return petList;
     }
 
-    public void setPetList (List<PetEntity> petList) {
+    public void setPetList(List<PetEntity> petList) {
         this.petList = petList;
     }
 }
