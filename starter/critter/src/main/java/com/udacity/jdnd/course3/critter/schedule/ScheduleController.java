@@ -16,27 +16,27 @@ public class ScheduleController {
     ScheduleService scheduleService;
 
     @PostMapping
-    public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) throws Exception {
-        return scheduleService.createSchedule(scheduleDTO);
+    public ScheduleDTO createSchedule (@RequestBody ScheduleDTO scheduleDTO) throws Exception {
+        return scheduleService.createSchedule( scheduleDTO );
     }
 
     @GetMapping
-    public List<ScheduleDTO> getAllSchedules() {
+    public List<ScheduleDTO> getAllSchedules () {
         return scheduleService.getAllSchedules();
     }
 
     @GetMapping("/pet/{petId}")
-    public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+    public List<ScheduleDTO> getScheduleForPet (@PathVariable long petId) {
+        return scheduleService.getScheduleEntityByPetId( petId );
     }
 
     @GetMapping("/employee/{employeeId}")
-    public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public List<ScheduleDTO> getScheduleForEmployee (@PathVariable long employeeId) {
+        return scheduleService.getScheduleEntityByEmployeeId( employeeId );
     }
 
     @GetMapping("/customer/{customerId}")
-    public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        throw new UnsupportedOperationException();
+    public List<ScheduleDTO> getScheduleForCustomer (@PathVariable long customerId) {
+        return scheduleService.getScheduleEntityByCustomerId( customerId );
     }
 }

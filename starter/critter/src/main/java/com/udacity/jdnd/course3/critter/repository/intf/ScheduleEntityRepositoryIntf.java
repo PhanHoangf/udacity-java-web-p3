@@ -8,7 +8,7 @@ import java.util.List;
 public interface ScheduleEntityRepositoryIntf {
     List<ScheduleEntity> getAllSchedules();
 
-    List<ScheduleEntity> getScheduleEntityByPetId(Long petId);
+    List<ScheduleEntity> getScheduleEntityByPetId(Long petId) throws Exception;
 
     List<ScheduleEntity> getScheduleEntityByEmployeeId(Long employeeId);
 

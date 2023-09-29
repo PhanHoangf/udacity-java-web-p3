@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,80 +37,119 @@ public class ScheduleService {
     @Autowired
     SkillRepository skillRepository;
 
-    public List<ScheduleDTO> getAllSchedules() {
+    public List<ScheduleDTO> getAllSchedules () {
         List<ScheduleEntity> scheduleEntities = scheduleRepository.getAllSchedules();
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
 
-        for (ScheduleEntity entity : scheduleEntities) {
+        for ( ScheduleEntity entity : scheduleEntities ) {
             ScheduleDTO scheduleDTO = new ScheduleDTO();
-            scheduleDTO = toScheduleDto(entity);
-            scheduleDTOS.add(scheduleDTO);
+            scheduleDTO = toScheduleDto( entity );
+            scheduleDTOS.add( scheduleDTO );
         }
 
         return scheduleDTOS;
     }
 
-    ScheduleDTO toScheduleDto(ScheduleEntity entity) {
+    ScheduleDTO toScheduleDto (ScheduleEntity entity) {
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setId(entity.getId());
-        scheduleDTO.setDate(entity.getDate());
-        scheduleDTO.setActivities(Utils.<SkillEntity>collectionAsStream(entity.getSkillEntities())
-                .map(SkillEntity::getSkillName)
-                .collect(Collectors.toSet()));
+        scheduleDTO.setId( entity.getId() );
+        scheduleDTO.setDate( entity.getDate() );
+        scheduleDTO.setActivities( Utils.<SkillEntity>collectionAsStream( entity.getSkillEntities() )
+                .map( SkillEntity::getSkillName )
+                .collect( Collectors.toSet() ) );
         scheduleDTO.setEmployeeIds(
-                Utils.<EmployeeEntity>collectionAsStream(entity.getEmployeeEntities())
-                        .map(EmployeeEntity::getId)
-                        .collect(Collectors.toList())
+                Utils.<EmployeeEntity>collectionAsStream( entity.getEmployeeEntities() )
+                        .map( EmployeeEntity::getId )
+                        .collect( Collectors.toList() )
         );
         scheduleDTO.setPetIds(
-                Utils.<PetEntity>collectionAsStream(entity.getPetEntities())
-                        .map(PetEntity::getId)
-                        .collect(Collectors.toList())
+                Utils.<PetEntity>collectionAsStream( entity.getPetEntities() )
+                        .map( PetEntity::getId )
+                        .collect( Collectors.toList() )
         );
 
         return scheduleDTO;
     }
 
-    public ScheduleDTO createSchedule(ScheduleDTO scheduleDTO) throws Exception {
-        Long employeeId = scheduleDTO.getEmployeeIds().get(0);
-        Long petId = scheduleDTO.getPetIds().get(0);
+    public ScheduleDTO createSchedule (ScheduleDTO scheduleDTO) throws Exception {
+        List<Long> employeeIds = scheduleDTO.getEmployeeIds();
+        List<Long> petIds = scheduleDTO.getPetIds();
         Set<EmployeeSkill> activities = scheduleDTO.getActivities();
         LocalDate date = scheduleDTO.getDate();
 
         EmployeeRequestDTO employeeDTO = new EmployeeRequestDTO();
-        employeeDTO.setDate(date);
-        employeeDTO.setSkills(activities);
+        employeeDTO.setDate( date );
+        employeeDTO.setSkills( activities );
 
-        List<EmployeeEntity> employeeEntities = employeeRepository.findEmployeesForService(employeeDTO);
         List<EmployeeEntity> employeeEntitiesToCreateSchedule = new ArrayList<>();
+        List<SkillEntity> skillEntities = new ArrayList<>();
 
-        for (EmployeeEntity em : employeeEntities) {
-            if (em.getId().equals(employeeId)) {
-                employeeEntitiesToCreateSchedule.add(em);
+
+        for ( EmployeeSkill skill : activities ) {
+            SkillEntity skillEntity = skillRepository.findFirstBySkillName( skill );
+            if ( !Objects.isNull( skillEntity ) ) {
+                skillEntities.add( skillEntity );
             } else {
-                throw new Exception("Employee not available");
+
             }
         }
 
-        PetEntity petEntity = petRepository.findPetById(petId);
+        List<EmployeeEntity> employeeEntities = employeeRepository.findEmployeesForService( employeeDTO );
 
-        List<SkillEntity> skillEntities = new ArrayList<>();
+        for ( EmployeeEntity em : employeeEntities ) {
+            if ( employeeIds.contains( em.getId() ) ) {
+                employeeEntitiesToCreateSchedule.add( em );
+            }
+        }
 
-        for (EmployeeSkill skill : activities) {
-            SkillEntity skillEntity = skillRepository.findFirstBySkillName(skill);
-            skillEntities.add(skillEntity);
+        List<PetEntity> petEntitiesToCreateSchedule = new ArrayList<>();
+
+        for ( Long petId : petIds ) {
+            PetEntity petEntity = petRepository.findPetById( petId );
+            if ( !Objects.isNull( petEntity ) ) {
+                petEntitiesToCreateSchedule.add( petEntity );
+            } else {
+
+            }
         }
 
         ScheduleEntity scheduleEntity = new ScheduleEntity();
 
-        scheduleEntity.setEmployeeEntities(employeeEntitiesToCreateSchedule);
-        scheduleEntity.setPetEntities(Lists.newArrayList(petEntity));
-        scheduleEntity.setSkillEntities(skillEntities);
-        scheduleEntity.setDate(date);
+        scheduleEntity.setEmployeeEntities( employeeEntitiesToCreateSchedule );
+        scheduleEntity.setPetEntities( petEntitiesToCreateSchedule );
+        scheduleEntity.setSkillEntities( skillEntities );
+        scheduleEntity.setDate( date );
 
-        scheduleRepository.createSchedule(scheduleEntity);
+        scheduleRepository.createSchedule( scheduleEntity );
 
-        scheduleDTO.setId(scheduleEntity.getId());
+        scheduleDTO.setId( scheduleEntity.getId() );
         return scheduleDTO;
+    }
+
+    public List<ScheduleDTO> getScheduleEntityByPetId (Long petId) {
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.getScheduleEntityByPetId( petId );
+
+        return Utils.<ScheduleEntity>collectionAsStream( scheduleEntities )
+                .map( this::toScheduleDto )
+                .collect(
+                        Collectors.toList() );
+    }
+
+    public List<ScheduleDTO> getScheduleEntityByEmployeeId (Long employeeId) {
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.getScheduleEntityByEmployeeId( employeeId );
+
+        return Utils.<ScheduleEntity>collectionAsStream( scheduleEntities )
+                .map( this::toScheduleDto )
+                .collect(
+                        Collectors.toList() );
+    }
+
+    public List<ScheduleDTO> getScheduleEntityByCustomerId (Long customerId) {
+        List<ScheduleEntity> scheduleEntities = scheduleRepository.getScheduleEntityByCustomerId( customerId );
+
+        return Utils.<ScheduleEntity>collectionAsStream( scheduleEntities )
+                .map( this::toScheduleDto )
+                .collect(
+                        Collectors.toList() );
     }
 }

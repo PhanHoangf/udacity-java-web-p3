@@ -36,7 +36,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryIntf {
     SkillRepository skillRepository;
 
     public void createEmployee(EmployeeEntity employeeEntity) {
-        entityManager.persist(employeeEntity);
+       if(employeeEntity.getId() == null) {
+           entityManager.persist(employeeEntity);
+       } else entityManager.merge( employeeEntity );
     }
 
     @Override
