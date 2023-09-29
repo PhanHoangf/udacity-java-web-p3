@@ -5,8 +5,7 @@ import com.udacity.jdnd.course3.critter.entity.EmployeeEntity;
 import com.udacity.jdnd.course3.critter.entity.PetEntity;
 import com.udacity.jdnd.course3.critter.entity.ScheduleEntity;
 import com.udacity.jdnd.course3.critter.repository.intf.ScheduleEntityRepositoryIntf;
-import com.udacity.jdnd.course3.critter.user.TypeIdSearch;
-import net.bytebuddy.implementation.bytecode.Throw;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
