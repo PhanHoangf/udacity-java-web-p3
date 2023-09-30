@@ -4,6 +4,9 @@ import com.udacity.jdnd.course3.critter.entity.SkillEntity;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.transaction.Transactional;
+
+@Transactional
 public interface SkillRepository extends JpaRepository<SkillEntity, Long> {
     SkillEntity findFirstBySkillName(EmployeeSkill employeeSkill);
 }

@@ -13,13 +13,16 @@ import com.udacity.jdnd.course3.critter.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class EmployeeService {
     @Autowired
     private EmployeeRepositoryImpl employeeRepository;
@@ -51,7 +54,7 @@ public class EmployeeService {
             skillEntities.add(skillEntity);
         }
 
-        if (!dayOfWeeks.isEmpty()) {
+        if (!Objects.isNull(dayOfWeeks) && !dayOfWeeks.isEmpty()) {
             for (DayOfWeek dayOfWeek : dayOfWeeks) {
                 DayEntity dayEntity = dayRepository.findDayEntityByDayOfWeek(dayOfWeek);
 
