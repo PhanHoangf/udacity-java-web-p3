@@ -5,7 +5,6 @@ import com.udacity.jdnd.course3.critter.entity.EmployeeEntity;
 import com.udacity.jdnd.course3.critter.entity.PetEntity;
 import com.udacity.jdnd.course3.critter.entity.ScheduleEntity;
 import com.udacity.jdnd.course3.critter.repository.intf.ScheduleEntityRepositoryIntf;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,79 +35,88 @@ public class ScheduleRepositoryImpl implements ScheduleEntityRepositoryIntf {
     CustomerRepositoryImpl customerRepository;
 
     @Override
-    public List<ScheduleEntity> getScheduleEntityByPetId (
+    public List<ScheduleEntity> getScheduleEntityByPetId(
             Long id
     ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ScheduleEntity> query = cb.createQuery( ScheduleEntity.class );
-        Root<ScheduleEntity> root = query.from( ScheduleEntity.class );
+        CriteriaQuery<ScheduleEntity> query = cb.createQuery(ScheduleEntity.class);
+        Root<ScheduleEntity> root = query.from(ScheduleEntity.class);
 
 
-        PetEntity petEntity = petRepository.findPetById( id );
+        PetEntity petEntity = petRepository.findPetById(id);
 
 
-        if ( !Objects.isNull( petEntity ) ) {
-            query.select( root ).where( cb.isMember( petEntity, root.get( "petEntities" ) ) );
+        if (!Objects.isNull(petEntity)) {
+            query.select(root)
+                    .where(cb.isMember(petEntity, root.get("petEntities")));
         } else {
-            throw new RuntimeException( "Not found" );
+            throw new RuntimeException("Not found");
         }
 
-        return entityManager.createQuery( query ).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public List<ScheduleEntity> getScheduleEntityByEmployeeId (
+    public List<ScheduleEntity> getScheduleEntityByEmployeeId(
             Long employeeId
     ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ScheduleEntity> query = cb.createQuery( ScheduleEntity.class );
-        Root<ScheduleEntity> root = query.from( ScheduleEntity.class );
+        CriteriaQuery<ScheduleEntity> query = cb.createQuery(ScheduleEntity.class);
+        Root<ScheduleEntity> root = query.from(ScheduleEntity.class);
 
 
-        EmployeeEntity employeeEntity = employeeRepository.findEmployeeById( employeeId );
+        EmployeeEntity employeeEntity = employeeRepository.findEmployeeById(employeeId);
 
 
-        if ( !Objects.isNull( employeeEntity ) ) {
-            query.select( root ).where( cb.isMember( employeeEntity, root.get( "employeeEntities" ) ) );
+        if (!Objects.isNull(employeeEntity)) {
+            query.select(root)
+                    .where(cb.isMember(employeeEntity, root.get("employeeEntities")));
         } else {
-            throw new RuntimeException( "Not found" );
+            throw new RuntimeException("Not found");
         }
 
-        return entityManager.createQuery( query ).getResultList();
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public List<ScheduleEntity> getScheduleEntityByCustomerId (
+    public List<ScheduleEntity> getScheduleEntityByCustomerId(
             Long customerId
     ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ScheduleEntity> query = cb.createQuery( ScheduleEntity.class );
-        Root<ScheduleEntity> root = query.from( ScheduleEntity.class );
+        CriteriaQuery<ScheduleEntity> query = cb.createQuery(ScheduleEntity.class);
+        Root<ScheduleEntity> root = query.from(ScheduleEntity.class);
 
-        CustomerEntity customerEntity = customerRepository.findCustomerById( customerId );
-        List<PetEntity> petEntities = petRepository.getPetsByOwnerId( customerId );
+        CustomerEntity customerEntity = customerRepository.findCustomerById(customerId);
+        List<PetEntity> petEntities = petRepository.getPetsByOwnerId(customerId);
 
-        if ( !Objects.isNull( customerEntity ) ) {
-            query.select( root ).where( cb.isMember( petEntities, root.get( "petEntities" ) ) );
-        } else {
-            throw new RuntimeException( "Not found" );
+        List<Predicate> predicateList = new ArrayList<>();
+
+        for (PetEntity pet : petEntities) {
+            predicateList.add(cb.isMember(pet, root.get("petEntities")));
         }
 
-        return entityManager.createQuery( query ).getResultList();
+        if (!Objects.isNull(customerEntity)) {
+            query.select(root)
+                    .where(cb.and(predicateList.toArray(new Predicate[0])));
+        } else {
+            throw new RuntimeException("Not found");
+        }
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public List<ScheduleEntity> getAllSchedules () {
+    public List<ScheduleEntity> getAllSchedules() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<ScheduleEntity> query = cb.createQuery( ScheduleEntity.class );
-        Root<ScheduleEntity> root = query.from( ScheduleEntity.class );
+        CriteriaQuery<ScheduleEntity> query = cb.createQuery(ScheduleEntity.class);
+        Root<ScheduleEntity> root = query.from(ScheduleEntity.class);
 
-        query.select( root );
-        return entityManager.createQuery( query ).getResultList();
+        query.select(root);
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public void createSchedule (ScheduleEntity scheduleEntity) {
-        entityManager.persist( scheduleEntity );
+    public void createSchedule(ScheduleEntity scheduleEntity) {
+        entityManager.persist(scheduleEntity);
     }
 }
